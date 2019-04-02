@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import ResourceList from 'ResourceList'
+import ResourceList from './ResourceList'
 
 const App = () => {
   const [resource, setResource] = useState('posts')
