@@ -1,28 +1,25 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
-export default class ResourceList extends Component {
-  state = { resources: [] }
+// pass resource prop into argument to stay dry
+const ResourceList = ({ resource }) => {
+  // useState hook to replicate this.state and this.setState
+  const [resources, setResources] = useState([])
 
-  async componentDidMount () {
-    const res = await axios(
-      `https://jsonplaceholder.typicode.com/${this.props.resource}`
-    )
-    this.setState({ resources: res.data })
+  const fetchResource = async resource => {
+    const res = await axios(`https://jsonplaceholder.typicode.com/${resource}`)
+    setResources(res.data)
   }
 
-  // Lifecycle method gets called anytime our component re-renders either because of a parent component or whenever we call setSTate inside current component
-  async componentDidUpdate (prevProps) {
-    // if the previous props resource is different from current (based on click change), do another fetch to specified api to re-render component
-    if (prevProps.resource !== this.props.resource) {
-      const res = await axios(
-        `https://jsonplaceholder.typicode.com/${this.props.resource}`
-      )
-      this.setState({ resources: res.data })
-    }
-  }
+  // useEffect hook to utilizes lifecycle methods CDU and CDM
+  useEffect(
+    () => {
+      fetchResource(resource)
+    },
+    [resource]
+  )
 
-  render () {
-    return <div>{this.state.resources.length}</div>
-  }
+  return <div>{resources.length}</div>
 }
+
+export default ResourceList
